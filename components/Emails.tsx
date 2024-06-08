@@ -27,6 +27,7 @@ function Emails() {
           console.log(emailCount, 'ema');
           setLoading(true);
           const res = await axios.get<Email[]>(`/api/emails?count=${emailCount}`);
+          localStorage.setItem("emails", JSON.stringify(res.data));
           setEmails(res.data);
           setLoading(false);
         }
@@ -43,9 +44,14 @@ function Emails() {
     useEffect(() => {
         const storedKey = localStorage.getItem("OPENAI");
         const getemail = async() =>{
-          const res = await axios.get(`/api/emails?count=${emailCount}`);
-          localStorage.setItem("emails", res.data);
-          setEmails(res.data);
+          const email = localStorage.getItem("emails");
+          if(!email){
+            const res = await axios.get(`/api/emails?count=${emailCount}`);
+            localStorage.setItem("emails", JSON.stringify(res.data));
+            setEmails(res.data);
+          }else{
+            setEmails(JSON.parse(email));
+          }
           setLoading(false);
         }
         getemail();
@@ -58,7 +64,7 @@ function Emails() {
     return (
       <>
       <div className="flex justify-end mt-6">
-        <button className="p-2 bg-red-500 text-white rounded" onClick={() => signOut()}>Sign out</button>
+        <button className="p-2 border-red-500 border-2 text-red-300 rounded" onClick={() => signOut()}>Sign out</button>
       </div>
       {session && !loading? (
               <div className="flex">
@@ -78,7 +84,7 @@ function Emails() {
                   <div className="flex justify-between">
                     {/* <button onClick={fetchEmails} className="mt-4 p-2 bg-blue-500 text-white rounded">Fetch Emails</button> */}
                     <div className="flex items-center">
-                      <button onClick={fetchEmails} className="p-2 bg-blue-500 text-white rounded">Fetch Emails</button>
+                      <button onClick={fetchEmails} className="p-2 border-2 bg-dark-200 border-blue-500 text-blue-300 rounded">Fetch Emails</button>
                       <select 
                         className="ml-4 p-2 border text-black rounded"
                         value={emailCount} 
@@ -89,7 +95,7 @@ function Emails() {
                         <option value={15}>15</option>
                       </select>
                     </div>
-                    <button onClick={classifyEmails} className="mt-4 p-2 bg-green-500 text-white rounded">Classify Emails</button>
+                    <button onClick={classifyEmails} className="mt-4 p-2 border-2 border-green-500 text-green-300 rounded">Classify Emails</button>
                   </div>
                   <div className="mt-4 h-[32rem] overflow-y-auto">
                     {emails.map((email) => (
@@ -116,7 +122,11 @@ function Emails() {
                 </div>
               </div>
             ):
-          <div> loading {loading}</div>}
+          <div className="flex justify-center items-center"> 
+            <div className="animate-pulse">
+              loading</div>
+          </div>
+          }
       </>
     )
 }

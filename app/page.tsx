@@ -10,7 +10,7 @@ import Image from "next/image";
 export default async function Home() {
   const session = await getServerSession();
   return (
-    <main className="flex items-center justify-center p-24 h-screen">
+    <main className="flex items-center justify-center p-24 h-screen ">
       {session==null?<div>
         <Signin/>
         </div>:
