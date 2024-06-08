@@ -9,5 +9,5 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const classifiedEmails = await classifyEmails(openAIKey, emails);
     // console.log(classifiedEmails, 'classy');
     
-    return NextResponse.json({mess: 'hibebe'});
+    return NextResponse.json(classifiedEmails);
 };

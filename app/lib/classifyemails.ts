@@ -3,6 +3,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import axios from 'axios';
 export async function classifyEmails(apiKey: string, emails: any[]) {
 
+  try {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
 
@@ -10,22 +11,39 @@ export async function classifyEmails(apiKey: string, emails: any[]) {
       `Email ${index + 1}:\nfrom: ${email.from}\nSubject: ${email.subject}\nSnippet: ${email.snippet}\nCategory:`
     )).join('\n\n');
     console.log('prompt');
+    const completePrompt = `
+      Classify the following emails into the categories: Important, Promotional, Social, Marketing, and Spam.
+      Return an array of categories with only the category name for each email.
+
+      ${prompt}
+    `;
     // Send a single request to OpenAI API
-    try {
-      const result = await model.generateContent("Classify emails into important, Promotional, social, marketing, and spam categories and return a array of categories containing category only"+prompt);
+      const result = await model.generateContent("Classify the following emails into the categories: Important, Promotional, Social, Marketing, and Spam."+prompt);
       
       const resultText = result.response.text();
       console.log(resultText, 'resultText');
-      const categoryLines = resultText.split('\n').filter(line => line.includes('Category:'));
+      const categoryLines = resultText.split('\n').filter(line => line.includes('**'));
       console.log('category, ', categoryLines);
-  
-        const classifiedEmails = emails.map((email, index) => ({
-          ...email,
-          category: categoryLines[index] ? categoryLines[index].split('**')[3] : 'Unknown',
-        }));
-        console.log(classifiedEmails, 'hy');
+      const categories = ['Important', 'Promotional', 'Social', 'Marketing', 'Spam'];
+
+        // Extract categories by checking the presence of each defined category
+        const extractedCategories = categoryLines.map(line => {
+            for (const category of categories) {
+                if (line.includes(category)) {
+                    return category;
+                }
+            }
+            return 'Unknown';
+        });
+        console.log(extractedCategories);
         
-        return classifiedEmails;
+      const classifiedEmails = emails.map((email, index) => ({
+        ...email,
+        category: extractedCategories[index] || 'Unknown',
+      }));
+      // console.log(classifiedEmails, 'hy');
+        
+      return classifiedEmails;
     } catch (error) {
       console.error('Error:', error);
     }

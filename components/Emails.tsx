@@ -25,17 +25,19 @@ function Emails() {
     const fetchEmails = async () => {
         if (session) {
           console.log(emailCount, 'ema');
-          
+          setLoading(true);
           const res = await axios.get<Email[]>(`/api/emails?count=${emailCount}`);
           setEmails(res.data);
+          setLoading(false);
         }
     };
     
     const classifyEmails = async () => {
+        setLoading(true);
         const res = await axios.post<Email[]>('/api/classify', { openAIKey, emails });
-        console.log(res.data, 'emails se');
-        
-        // setEmails(res.data);
+        console.log(res.data, 'emails se');     
+        setEmails(res.data);
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -85,18 +87,19 @@ function Emails() {
                         <option value={5}>5</option>
                         <option value={10}>10</option>
                         <option value={15}>15</option>
-                        <option value={20}>20</option>
                       </select>
                     </div>
                     <button onClick={classifyEmails} className="mt-4 p-2 bg-green-500 text-white rounded">Classify Emails</button>
                   </div>
                   <div className="mt-4 h-[32rem] overflow-y-auto">
                     {emails.map((email) => (
-                      <div key={email.id} onClick={() => setSelectedEmail(email)} className="p-2 rounded-lg m-2 border-2 border-cyan-300">
-                        <h2>From: {email.from}</h2>
+                      <div key={email.id} onClick={() => setSelectedEmail(email)} className="p-2 cursor-pointer rounded-lg m-2 border-2 border-cyan-300">
+                        <div className="flex justify-between">
+                          <h2>From: {email.from}</h2>
+                          { email.category?<p className="text-sm border-dashed border-orange-500 border-2 p-2 rounded-full text-purple-400">{email.category}</p>:<></>}                
+                        </div>
                         <h3>Subject: {email.subject}</h3>
                         <p>{email.snippet}</p>
-                        { email.category?<p className="text-sm text-gray-600">Category: {email.category}</p>:<></>}                
                       </div>
                     ))}
                   </div>
@@ -104,6 +107,9 @@ function Emails() {
                 <div>
                 {selectedEmail && 
                 <div className="fr py-4 border-l text-wrap w-full">
+                  <div className="flex justify-end">
+                    <button className="bg-red-500 w-4 m-2 p-2 w-8 text-center" onClick={() => setSelectedEmail(null)}>X</button>
+                  </div>
                   <EmailDetail email={selectedEmail}/>  
                 </div>
                 }
