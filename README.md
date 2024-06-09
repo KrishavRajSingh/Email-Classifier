@@ -21,6 +21,10 @@ Install the pakages
 ```bash
 npm i
 ```
+Install next
+```bash
+npm i next
+```
 
 Copy .env.example into .env
 ```bash
