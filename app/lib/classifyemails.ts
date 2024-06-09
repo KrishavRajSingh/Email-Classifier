@@ -18,7 +18,13 @@ export async function classifyEmails(apiKey: string, emails: any[]) {
       ${prompt}
     `;
     // Send a single request to OpenAI API
-      const result = await model.generateContent("Classify the following emails into the categories: Important, Promotional, Social, Marketing, and Spam."+prompt);
+      const result = await model.generateContent(`Classify the following emails into the categories: Important, Promotional, Social, Marketing, and Spam. 
+        Important: Emails that are personal or work-related and require immediate attention.
+        Promotions: Emails related to sales, discounts, and marketing campaigns.
+        Social: Emails from social networks, friends, and family.
+        Marketing: Emails related to marketing, newsletters, and notifications.
+        Spam: Unwanted or unsolicited emails.
+        `+prompt);
       
       const resultText = result.response.text();
       console.log(resultText, 'resultText');
@@ -33,13 +39,13 @@ export async function classifyEmails(apiKey: string, emails: any[]) {
                     return category;
                 }
             }
-            return 'Unknown';
+            return 'General';
         });
         console.log(extractedCategories);
         
       const classifiedEmails = emails.map((email, index) => ({
         ...email,
-        category: extractedCategories[index] || 'Unknown',
+        category: extractedCategories[index] || 'General',
       }));
       // console.log(classifiedEmails, 'hy');
         

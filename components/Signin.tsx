@@ -9,7 +9,7 @@ export function Signin() {
   const handleSetApiKey = () => {
     if (apiKey) {
       localStorage.setItem("ApiKey", apiKey)
-      signIn(); // If OpenAI key is set, initiate sign-in
+      signIn(); // If Gemini key is set, initiate sign-in
     } else {
       alert('Please set Gemini API key first.'); // Alert user to set OpenAI key
     }

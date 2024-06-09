@@ -24,7 +24,6 @@ function Emails() {
     
     const fetchEmails = async () => {
         if (session) {
-          console.log(emailCount, 'ema');
           setLoading(true);
           const res = await axios.get<Email[]>(`/api/emails?count=${emailCount}`);
           localStorage.setItem("emails", JSON.stringify(res.data));
@@ -82,7 +81,6 @@ function Emails() {
                     </div>
                   </div>
                   <div className="flex justify-between">
-                    {/* <button onClick={fetchEmails} className="mt-4 p-2 bg-blue-500 text-white rounded">Fetch Emails</button> */}
                     <div className="flex items-center">
                       <button onClick={fetchEmails} className="p-2 border-2 bg-dark-200 border-blue-500 text-blue-300 rounded">Fetch Emails</button>
                       <select 
