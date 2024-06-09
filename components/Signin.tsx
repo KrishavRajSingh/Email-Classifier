@@ -4,14 +4,14 @@ import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 
 export function Signin() {
-  const [openAIKey, setOpenAIKey] = useState<string>('');
+  const [apiKey, setApiKey] = useState<string>('');
 
   const handleSetApiKey = () => {
-    if (openAIKey) {
-      localStorage.setItem("OPENAI", openAIKey)
+    if (apiKey) {
+      localStorage.setItem("ApiKey", apiKey)
       signIn(); // If OpenAI key is set, initiate sign-in
     } else {
-      alert('Please set the OpenAI API key first.'); // Alert user to set OpenAI key
+      alert('Please set Gemini API key first.'); // Alert user to set OpenAI key
     }
   };
 
@@ -29,8 +29,8 @@ export function Signin() {
           <input
             type="text"
             placeholder="Enter Gemini Api Key"
-            value={openAIKey}
-            onChange={(e) => setOpenAIKey(e.target.value)}
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
             className="w-full p-3 border border-gray-700 text-center rounded-lg text-gray-200 bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           

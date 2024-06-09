@@ -18,7 +18,7 @@ function Emails() {
     const { data: session } = useSession();
     const [loading, setLoading] = useState(true);
     const [emails, setEmails] = useState<Email[]>([]);
-    const [openAIKey, setOpenAIKey] = useState<String | null>(null);
+    const [apiKey, setApiKey] = useState<String | null>(null);
     const [emailCount, setEmailCount] = useState<number>(5);
     const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
     
@@ -35,14 +35,14 @@ function Emails() {
     
     const classifyEmails = async () => {
         setLoading(true);
-        const res = await axios.post<Email[]>('/api/classify', { openAIKey, emails });
+        const res = await axios.post<Email[]>('/api/classify', { apiKey, emails });
         console.log(res.data, 'emails se');     
         setEmails(res.data);
         setLoading(false);
     };
-
+    
     useEffect(() => {
-        const storedKey = localStorage.getItem("OPENAI");
+        const storedKey = localStorage.getItem("ApiKey");
         const getemail = async() =>{
           const email = localStorage.getItem("emails");
           if(!email){
@@ -56,7 +56,7 @@ function Emails() {
         }
         getemail();
         if (storedKey) {
-            setOpenAIKey(storedKey);
+            setApiKey(storedKey);
         }
     }, []);
 
@@ -113,7 +113,11 @@ function Emails() {
                 <div>
                 {selectedEmail && 
                 <div className="fr py-4 border-l text-wrap w-full">
-                  <div className="flex justify-end">
+                  <div className="flex justify-between items-center">
+                  { 
+                  selectedEmail.category?<p className="text-sm border-dashed border-orange-500 border-2 h-6 flex items-center m-3 p-2 rounded-full text-purple-400">{selectedEmail.category}</p>
+                  :<></>
+                  }
                     <button className="bg-red-500 w-4 m-2 p-2 w-8 text-center" onClick={() => setSelectedEmail(null)}>X</button>
                   </div>
                   <EmailDetail email={selectedEmail}/>  

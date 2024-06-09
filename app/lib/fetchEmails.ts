@@ -1,8 +1,8 @@
 import { google } from 'googleapis';
 
-export async function getEmails(authToken: string, count: number) {
+export async function getEmails(authToken: string, refreshToken: string, count: number) {
   const oAuth2Client = new google.auth.OAuth2();
-  oAuth2Client.setCredentials({ access_token: authToken });
+  oAuth2Client.setCredentials({ access_token: authToken, refresh_token: refreshToken });
 
   const gmail = google.gmail({ version: 'v1', auth: oAuth2Client });
   const res = await gmail.users.messages.list({ userId: 'me', maxResults: count });

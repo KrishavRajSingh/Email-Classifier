@@ -12,7 +12,10 @@ export async function GET(req: NextRequest, res: NextResponse) {
     if (!session) {
       return NextResponse.json({ error: 'Not authenticated' });
     }
-    const emails = await getEmails(token?.accessToken as string, count);
+    const refreshToken = token?.refreshToken;
+    console.log(token, 'refresh', refreshToken);
+    
+    const emails = await getEmails(token?.accessToken as string, refreshToken as string, count);
     return NextResponse.json(emails);
   }catch(err){
     console.error('error fetching email', err);
