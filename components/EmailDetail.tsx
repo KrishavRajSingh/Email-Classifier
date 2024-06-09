@@ -1,17 +1,9 @@
 // components/EmailDetail.tsx
-import sanitizeHtml from 'sanitize-html';
-
 interface EmailDetailProps {
     email: any;
   }
   
   function EmailDetail({ email }: EmailDetailProps) {
-    const clean = sanitizeHtml(email.body, {
-        allowedAttributes: {},
-        allowedTags: []
-      });
-    console.log(clean, 'hi', email.body);
-    
     return (
       <div className="p-4 border-l border-gray-200 text-wrap">
         <h2 className="text-xl font-bold mb-2">Subject: {email.subject}</h2>
