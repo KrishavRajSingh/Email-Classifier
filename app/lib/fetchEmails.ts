@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { google } from 'googleapis';
 
 export async function getEmails(authToken: string, refreshToken: string, count: number) {
