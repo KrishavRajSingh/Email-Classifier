@@ -1,3 +1,5 @@
+[Video Demonstration](https://github.com/KrishavRajSingh/Email-Classifier/assets/99531396/496cd818-b533-4d53-ab6c-420e0895a928)
+
 # Email-Classifier
 Email Classifier is a web application that categorizes emails into predefined categories such as Important, Promotional, Social, Marketing, and Spam using Gemini API. The application uses Google OAuth for authentication and the Gmail API to fetch emails.
 
